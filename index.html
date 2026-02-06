@@ -11,12 +11,48 @@
   <h1>Arithmos – Vitta Vibhava</h1>
 </header>
 
+<!-- START SCREEN -->
 <div id="startScreen">
-  <h2>Enter Your Name</h2>
-  <input type="text" id="playerName" placeholder="Your Name">
-  <button onclick="startGame()">Start</button>
+
+  <div id="nameSection">
+    <h2>Enter Your Name</h2>
+    <input type="text" id="playerName" placeholder="Your Name">
+    <button onclick="startGame()">Start</button>
+  </div>
+
+  <div id="instructions">
+
+    <h3>How To Play</h3>
+    <ul>
+      <li>Each clue cell contains two numbers.</li>
+      <li>Top-right number → Horizontal (Across) sum.</li>
+      <li>Bottom-left number → Vertical (Down) sum.</li>
+      <li>Numbers 1–9 only.</li>
+      <li>No duplicate number allowed in any run.</li>
+      <li>All white cells must be filled.</li>
+    </ul>
+
+    <h3>Controls</h3>
+    <ul>
+      <li>Click a cell to select it.</li>
+      <li>Use number pad or keyboard (1–9).</li>
+      <li>Undo button reverses last move.</li>
+      <li>Clear button resets board.</li>
+    </ul>
+
+    <h3>Competition Rules</h3>
+    <ul>
+      <li>Unlimited wrong attempts allowed.</li>
+      <li>Timer starts when game begins.</li>
+      <li>After correct submission, board locks.</li>
+      <li>52-character secure code generated.</li>
+    </ul>
+
+  </div>
+
 </div>
 
+<!-- GAME AREA -->
 <div id="gameArea" style="display:none;">
 
   <div id="timer">Time: 00:00</div>
@@ -31,14 +67,11 @@
 
   <p id="resultMessage"></p>
 
+  <!-- NUMBER PAD -->
   <div id="numberPad">
     <div class="pad-header" id="padHeader">
       <span>Number Pad</span>
-      <div>
-        <button onclick="resizePad(1)">+</button>
-        <button onclick="resizePad(-1)">−</button>
-        <button onclick="togglePad()">_</button>
-      </div>
+      <button onclick="togglePad()">_</button>
     </div>
     <div class="pad-body">
       <div class="pad-grid">
