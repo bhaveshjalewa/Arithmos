@@ -3,9 +3,10 @@ let interval;
 let activeCell=null;
 let boardCells=[];
 let runs=[];
+let moveHistory=[];
 let padScale=1;
+let locked=false;
 
-/* 18x18 layout */
 const layout = [
 ["B","B","C","C","C","C","C","C","C","C","C","C","C","C","C","C","B","B"],
 ["B","C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C","B"],
@@ -24,15 +25,22 @@ const layout = [
 ["C","W","W","W","C","C","W","W","W","C","C","W","W","W","C","C","W","C"],
 ["C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C"],
 ["B","C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C","B"],
-["B","B","C","C","C","C","C","C","C","C","C","C","C","C","C","C","B","B"]
+["B","B","C","W","W","W","W","W","W","W","W","W","W","W","W","C","B","B"]
 ];
 
-/* simple solution (for demo validation) */
 const solution = Array.from({length:18}, (_,r)=>
-  Array.from({length:18}, (_,c)=> layout[r][c]==="W"? ((r+c)%9)+1 : 0)
+  Array.from({length:18}, (_,c)=>{
+    if(layout[r][c]!=="W") return 0;
+    return ((r*3 + c*5) % 9) + 1;
+  })
 );
 
 function startGame(){
+  if(localStorage.getItem("arithmosLocked")){
+    alert("You already completed this puzzle.");
+    return;
+  }
+
   const name=document.getElementById("playerName").value.trim();
   if(!name){ alert("Enter name"); return; }
 
@@ -58,7 +66,6 @@ function buildBoard(){
   const board=document.getElementById("board");
   board.innerHTML="";
   const table=document.createElement("table");
-
   boardCells=[];
 
   for(let r=0;r<18;r++){
@@ -125,6 +132,7 @@ function assignClues(){
   runs.forEach(run=>{
     let sum=0;
     run.cells.forEach(cell=> sum+=solution[cell.r][cell.c]);
+    if(sum>55) sum=55;
 
     const first=run.cells[0];
 
@@ -142,6 +150,8 @@ function assignClues(){
 }
 
 function submitPuzzle(){
+  if(locked) return;
+
   for(let run of runs){
     let values=[];
     let sum=0;
@@ -169,21 +179,56 @@ function submitPuzzle(){
     if(sum!==clueSum) return showResult("Incorrect sum");
   }
 
-  showResult("Correct!");
+  clearInterval(interval);
+  locked=true;
+  localStorage.setItem("arithmosLocked",true);
+
+  const code=generateCode();
+  showResult("Correct! Code: "+code);
+}
+
+function generateCode(){
+  const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+  let code="";
+  for(let i=0;i<52;i++){
+    code+=chars[Math.floor(Math.random()*chars.length)];
+  }
+  return code;
 }
 
 function showResult(msg){
   document.getElementById("resultMessage").innerText=msg;
 }
 
-/* PAD FUNCTIONS */
-
 function insertNumber(num){
-  if(activeCell) activeCell.value=num;
+  if(locked) return;
+  if(activeCell){
+    moveHistory.push({cell:activeCell,value:activeCell.value});
+    activeCell.value=num;
+  }
 }
 
 function clearCell(){
-  if(activeCell) activeCell.value="";
+  if(locked) return;
+  if(activeCell){
+    moveHistory.push({cell:activeCell,value:activeCell.value});
+    activeCell.value="";
+  }
+}
+
+function undoMove(){
+  if(moveHistory.length===0) return;
+  const last=moveHistory.pop();
+  last.cell.value=last.value;
+}
+
+function clearBoard(){
+  boardCells.forEach(row=>{
+    row.forEach(cell=>{
+      if(cell.inputRef) cell.inputRef.value="";
+    });
+  });
+  moveHistory=[];
 }
 
 function resizePad(dir){
@@ -195,10 +240,9 @@ function resizePad(dir){
 
 function togglePad(){
   const body=document.querySelector(".pad-body");
-  body.style.display=body.style.display==="none"?"block":"block";
+  body.style.display=body.style.display==="none"?"block":"none";
 }
 
-/* DRAG */
 const pad=document.getElementById("numberPad");
 const header=document.getElementById("padHeader");
 let offsetX,offsetY,isDragging=false;
