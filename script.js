@@ -84,7 +84,12 @@ function buildBoard(){
       }
       else{
         td.className="white";
-        const input=document.createElement("input");
+      const input=document.createElement("input");
+input.maxLength = 1;   // ONLY 1 DIGIT
+input.addEventListener("input", function(){
+  this.value = this.value.replace(/[^1-9]/g, "");
+});
+
         input.addEventListener("click",()=> activeCell=input);
         td.appendChild(input);
         td.inputRef=input;
