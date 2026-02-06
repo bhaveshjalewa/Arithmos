@@ -1,32 +1,36 @@
 let timer=0;
 let interval;
 let activeCell=null;
-
 let boardCells=[];
 let runs=[];
 
-/* 18x18 Layout (~70% white) */
-const layout = [
-["B","B","C","C","C","C","C","C","C","C","C","C","C","C","C","C","B","B"],
-["B","C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C","B"],
-["C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C"],
-["C","W","W","W","C","C","W","W","W","C","C","W","W","W","C","C","W","C"],
-["C","W","W","W","C","W","W","W","C","W","W","W","C","W","W","W","C","W"],
-["C","W","W","W","C","W","W","W","C","W","W","W","C","W","W","W","C","W"],
-["C","W","W","W","C","C","W","W","W","C","C","W","W","W","C","C","W","C"],
-["C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C"],
-["C","W","W","W","W","W","C","C","W","W","C","C","W","W","W","W","W","C"],
-["C","W","W","W","W","W","C","C","W","W","C","C","W","W","W","W","W","C"],
-["C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C"],
-["C","W","W","W","C","C","W","W","W","C","C","W","W","W","C","C","W","C"],
-["C","W","W","W","C","W","W","W","C","W","W","W","C","W","W","W","C","W"],
-["C","W","W","W","C","W","W","W","C","W","W","W","C","W","W","W","C","W"],
-["C","W","W","W","C","C","W","W","W","C","C","W","W","W","C","C","W","C"],
-["C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C"],
-["B","C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C","B"],
-["B","B","C","C","C","C","C","C","C","C","C","C","C","C","C","C","B","B"]
+/* HIDDEN SOLUTION GRID (only white cells matter) */
+
+const solution = [
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,3,4,5,6,7,8,9,1,2,3,4,5,6,7,0,0],
+[0,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,0],
+[0,5,6,7,0,0,1,2,3,0,0,4,5,6,0,0,7,0],
+[0,6,7,8,0,1,2,3,0,4,5,6,0,7,8,9,0,1],
+[0,7,8,9,0,2,3,4,0,5,6,7,0,8,9,1,0,2],
+[0,8,9,1,0,0,4,5,6,0,0,7,8,9,0,0,1,0],
+[0,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,0],
+[0,1,2,3,4,5,0,0,6,7,0,0,8,9,1,2,3,0],
+[0,2,3,4,5,6,0,0,7,8,0,0,9,1,2,3,4,0],
+[0,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,0],
+[0,4,5,6,0,0,9,1,2,0,0,3,4,5,0,0,6,0],
+[0,5,6,7,0,8,9,1,0,2,3,4,0,5,6,7,0,8],
+[0,6,7,8,0,9,1,2,0,3,4,5,0,6,7,8,0,9],
+[0,7,8,9,0,0,2,3,4,0,0,5,6,7,0,0,8,0],
+[0,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,0],
+[0,0,2,3,4,5,6,7,8,9,1,2,3,4,5,6,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ];
 
+/* SAME LAYOUT AS BEFORE */
+const layout = window.layout;
+
+/* START GAME */
 function startGame(){
   const name=document.getElementById("playerName").value.trim();
   if(name===""){ alert("Enter your name"); return; }
@@ -36,9 +40,11 @@ function startGame(){
 
   buildBoard();
   detectRuns();
+  assignClues();
   startTimer();
 }
 
+/* TIMER */
 function startTimer(){
   interval=setInterval(()=>{
     timer++;
@@ -48,6 +54,7 @@ function startTimer(){
   },1000);
 }
 
+/* BUILD BOARD */
 function buildBoard(){
   const board=document.getElementById("board");
   board.innerHTML="";
@@ -72,9 +79,7 @@ function buildBoard(){
       else{
         td.className="white";
         const input=document.createElement("input");
-        input.addEventListener("click",()=>{
-          activeCell=input;
-        });
+        input.addEventListener("click",()=>{ activeCell=input; });
         td.appendChild(input);
         td.inputRef=input;
       }
@@ -89,102 +94,115 @@ function buildBoard(){
   board.appendChild(table);
 }
 
-/* RUN DETECTION */
-
+/* DETECT RUNS */
 function detectRuns(){
   runs=[];
-
   const size=18;
 
   for(let r=0;r<size;r++){
     for(let c=0;c<size;c++){
+      if(layout[r][c]==="W"){
 
-      const cell=boardCells[r][c];
-
-      if(cell.className==="white"){
-
-        /* Horizontal run start */
-        if(c===0 || boardCells[r][c-1].className!=="white"){
-
+        if(c===0 || layout[r][c-1]!=="W"){
           let run=[];
           let cc=c;
-
-          while(cc<size && boardCells[r][cc].className==="white"){
-            run.push(boardCells[r][cc]);
+          while(cc<size && layout[r][cc]==="W"){
+            run.push({r, c:cc});
             cc++;
           }
-
-          if(run.length>1){
-            runs.push({cells:run, direction:"across"});
-          }
+          if(run.length>1) runs.push({cells:run, dir:"across"});
         }
 
-        /* Vertical run start */
-        if(r===0 || boardCells[r-1][c].className!=="white"){
-
+        if(r===0 || layout[r-1][c]!=="W"){
           let run=[];
           let rr=r;
-
-          while(rr<size && boardCells[rr][c].className==="white"){
-            run.push(boardCells[rr][c]);
+          while(rr<size && layout[rr][c]==="W"){
+            run.push({r:rr, c});
             rr++;
           }
-
-          if(run.length>1){
-            runs.push({cells:run, direction:"down"});
-          }
+          if(run.length>1) runs.push({cells:run, dir:"down"});
         }
 
       }
     }
   }
+}
 
-  console.log("Total runs detected:", runs.length);
+/* ASSIGN CLUES FROM SOLUTION */
+function assignClues(){
+  runs.forEach(run=>{
+    let sum=0;
+    run.cells.forEach(cell=>{
+      sum+=solution[cell.r][cell.c];
+    });
+
+    const first=run.cells[0];
+
+    if(run.dir==="across"){
+      const clueCell=boardCells[first.r][first.c-1];
+      if(clueCell && clueCell.className==="clue"){
+        clueCell.querySelector(".across").innerText=sum;
+      }
+    }
+    else{
+      const clueCell=boardCells[first.r-1][first.c];
+      if(clueCell && clueCell.className==="clue"){
+        clueCell.querySelector(".down").innerText=sum;
+      }
+    }
+  });
+}
+
+/* VALIDATE */
+function submitPuzzle(){
+
+  for(let run of runs){
+    let values=[];
+    let sum=0;
+
+    for(let cell of run.cells){
+      let val=boardCells[cell.r][cell.c].inputRef.value;
+      if(val==="") return showResult("Fill all cells");
+      val=parseInt(val);
+      if(values.includes(val)) return showResult("Duplicate in run");
+      values.push(val);
+      sum+=val;
+    }
+
+    let clueSum=0;
+    const first=run.cells[0];
+
+    if(run.dir==="across"){
+      clueSum=parseInt(boardCells[first.r][first.c-1]
+      .querySelector(".across").innerText);
+    }
+    else{
+      clueSum=parseInt(boardCells[first.r-1][first.c]
+      .querySelector(".down").innerText);
+    }
+
+    if(sum!==clueSum) return showResult("Incorrect sum");
+  }
+
+  showResult("Correct!");
+}
+
+/* RESULT DISPLAY */
+function showResult(msg){
+  let res=document.getElementById("resultMessage");
+  if(!res){
+    res=document.createElement("p");
+    res.id="resultMessage";
+    document.getElementById("gameArea").appendChild(res);
+  }
+  res.innerText=msg;
 }
 
 /* NUMBER PAD */
-
 function insertNumber(num){
   if(activeCell) activeCell.value=num;
 }
 
 function clearCell(){
   if(activeCell) activeCell.value="";
-}
-
-/* DRAG PAD */
-
-const pad=document.getElementById("numberPad");
-const header=document.getElementById("padHeader");
-let offsetX, offsetY, isDragging=false;
-
-header.onmousedown=(e)=>{
-  isDragging=true;
-  offsetX=e.clientX-pad.offsetLeft;
-  offsetY=e.clientY-pad.offsetTop;
-};
-
-document.onmousemove=(e)=>{
-  if(!isDragging) return;
-  pad.style.left=(e.clientX-offsetX)+"px";
-  pad.style.top=(e.clientY-offsetY)+"px";
-  pad.style.bottom="auto";
-  pad.style.right="auto";
-};
-
-document.onmouseup=()=>{ isDragging=false; };
-
-function togglePad(){
-  const body=document.querySelector(".pad-body");
-  body.style.display=body.style.display==="none"?"block":"none";
-}
-let padScale = 1;
-
-function resizePad(direction){
-  padScale += direction * 0.1;
-
-  if(padScale < 0.6) padScale = 0.6;
-  if(padScale > 1.8) padScale = 1.8;
-
-  pad.style.transform = `scale(${padScale})`;
 }
