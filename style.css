@@ -13,10 +13,6 @@ header{
   font-weight:bold;
 }
 
-#startScreen{
-  margin-top:50px;
-}
-
 #timer{
   color:#facc15;
   font-weight:bold;
@@ -36,16 +32,11 @@ td{
   position:relative;
 }
 
-.white{
-  background:white;
-}
-
-.black{
-  background:black;
-}
+.white{ background:white; }
+.black{ background:black; }
 
 .clue{
-  background:#d1d5db;
+  background:#e5e7eb;
   position:relative;
 }
 
@@ -67,19 +58,13 @@ td{
 
 .clue span{
   position:absolute;
-  font-size:10px;
-  font-weight:bold;
+  font-size:11px;
+  font-weight:700;
+  color:black;
 }
 
-.across{
-  top:2px;
-  right:4px;
-}
-
-.down{
-  bottom:2px;
-  left:4px;
-}
+.across{ top:2px; right:4px; }
+.down{ bottom:2px; left:4px; }
 
 input{
   width:100%;
@@ -89,7 +74,9 @@ input{
   font-size:16px;
 }
 
-/* NUMBER PAD */
+.controls button{
+  margin:8px;
+}
 
 #numberPad{
   position:fixed;
@@ -112,17 +99,10 @@ input{
   justify-content:space-between;
 }
 
-.pad-body{
-  padding:10px;
-}
+.pad-body{ padding:10px; }
 
 .pad-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:5px;
-}
-
-button{
-  padding:6px;
-  margin:5px;
 }
