@@ -106,7 +106,9 @@ input{
   color:black;
   border-radius:8px;
   box-shadow:0 5px 15px rgba(0,0,0,0.5);
+  transform-origin: bottom right;   /* ADD THIS LINE */
 }
+
 
 .pad-header{
   background:#111827;
