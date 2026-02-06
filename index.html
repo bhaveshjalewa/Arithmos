@@ -11,25 +11,26 @@
   <h1>Arithmos – Vitta Vibhava</h1>
 </header>
 
-<!-- START SCREEN -->
 <div id="startScreen">
   <h2>Enter Your Name</h2>
   <input type="text" id="playerName" placeholder="Your Name">
   <button onclick="startGame()">Start</button>
 </div>
 
-<!-- GAME AREA -->
 <div id="gameArea" style="display:none;">
 
   <div id="timer">Time: 00:00</div>
 
   <div id="board"></div>
 
-  <button onclick="submitPuzzle()">Submit</button>
+  <div class="controls">
+    <button onclick="submitPuzzle()">Submit</button>
+    <button onclick="undoMove()">Undo</button>
+    <button onclick="clearBoard()">Clear</button>
+  </div>
 
   <p id="resultMessage"></p>
 
-  <!-- NUMBER PAD INSIDE GAME -->
   <div id="numberPad">
     <div class="pad-header" id="padHeader">
       <span>Number Pad</span>
@@ -51,7 +52,7 @@
         <button onclick="insertNumber(8)">8</button>
         <button onclick="insertNumber(9)">9</button>
       </div>
-      <button onclick="clearCell()">Clear</button>
+      <button onclick="clearCell()">Clear Cell</button>
     </div>
   </div>
 
