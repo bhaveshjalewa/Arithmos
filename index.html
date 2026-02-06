@@ -26,8 +26,13 @@
 <div id="numberPad">
   <div class="pad-header" id="padHeader">
     <span>Number Pad</span>
-    <button onclick="togglePad()">–</button>
+    <div>
+      <button onclick="resizePad(1)">+</button>
+      <button onclick="resizePad(-1)">−</button>
+      <button onclick="togglePad()">_</button>
+    </div>
   </div>
+
   <div class="pad-body">
     <div class="pad-grid">
       <button onclick="insertNumber(1)">1</button>
