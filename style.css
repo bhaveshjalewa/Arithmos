@@ -57,11 +57,19 @@ td{
 .clue::after{
   content:"";
   position:absolute;
+  top:0;
+  left:0;
   width:100%;
   height:100%;
-  border-top:1px solid black;
-  transform:skewY(-45deg);
+  background:linear-gradient(
+    45deg,
+    transparent 49%,
+    black 50%,
+    black 51%,
+    transparent 52%
+  );
 }
+
 
 .clue span{
   position:absolute;
