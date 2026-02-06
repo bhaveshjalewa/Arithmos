@@ -1,0 +1,120 @@
+body{
+  margin:0;
+  font-family:Segoe UI;
+  background:#0f172a;
+  color:white;
+  text-align:center;
+}
+
+header{
+  background:#111827;
+  padding:15px;
+  font-size:22px;
+  font-weight:bold;
+  letter-spacing:1px;
+}
+
+#startScreen{
+  margin-top:50px;
+}
+
+#gameArea{
+  margin-top:20px;
+}
+
+#timer{
+  font-size:18px;
+  color:#facc15;
+  margin-bottom:15px;
+}
+
+table{
+  border-collapse:collapse;
+  margin:auto;
+  background:white;
+}
+
+td{
+  width:38px;
+  height:38px;
+  border:1px solid #000;
+  position:relative;
+}
+
+.white{
+  background:white;
+}
+
+.black{
+  background:#000;
+}
+
+.clue{
+  background:#d1d5db;
+  position:relative;
+}
+
+.clue::after{
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  border-top:1px solid black;
+  transform:skewY(-45deg);
+}
+
+.clue span{
+  position:absolute;
+  font-size:10px;
+  font-weight:bold;
+}
+
+.down{
+  bottom:3px;
+  left:4px;
+}
+
+.across{
+  top:3px;
+  right:4px;
+}
+
+input{
+  width:100%;
+  height:100%;
+  border:none;
+  text-align:center;
+  font-size:16px;
+}
+
+/* NUMBER PAD */
+
+#numberPad{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:180px;
+  background:white;
+  color:black;
+  border-radius:8px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.5);
+}
+
+.pad-header{
+  background:#111827;
+  color:white;
+  padding:6px;
+  cursor:move;
+  display:flex;
+  justify-content:space-between;
+}
+
+.pad-body{
+  padding:10px;
+}
+
+.pad-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:5px;
+}
