@@ -54,9 +54,9 @@ table{
 }
 
 td{
-  width:40px;
-  height:40px;
-  border:2px solid #000;   /* STRONG CLEAR BORDER */
+  width:38px;
+  height:38px;
+  border:1.5px solid #000;   /* FULL BOX BORDER */
   position:relative;
 }
 
@@ -82,34 +82,36 @@ td{
 .clue::after{
   content:"";
   position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  border-top:2px solid black;
+  width:140%;
+  height:2px;
+  background:black;
+  top:50%;
+  left:-20%;
   transform:rotate(45deg);
   transform-origin:center;
-  pointer-events:none;
 }
+
 
 /* Clue numbers */
 .clue span{
   position:absolute;
-  font-size:12px;
+  font-size:11px;
   font-weight:700;
   color:black;
+  pointer-events:none;
 }
+
 
 /* Across (right clue) → top-right */
 .clue .right{
   top:3px;
-  right:4px;
+  right:5px;
 }
 
 /* Down clue → bottom-left */
 .clue .down{
   bottom:3px;
-  left:4px;
+  left:5px;
 }
 
 /* ================= INPUT ================= */
