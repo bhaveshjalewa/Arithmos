@@ -1,57 +1,70 @@
-let timer=0;
+/* ================= CONFIG ================= */
+
+const SIZE = 18;
+let timer = 0;
 let interval;
-let activeCell=null;
-let boardCells=[];
-let runs=[];
-let moveHistory=[];
-let padScale=1;
-let locked=false;
+let locked = false;
+let activeInput = null;
+let undoStack = [];
+const lockKey = "arithmosSolved";
 
-const layout = [
-["B","B","C","C","C","C","C","C","C","C","C","C","C","C","C","C","B","B"],
-["B","C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C","B"],
-["C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C"],
-["C","W","W","W","C","C","W","W","W","C","C","W","W","W","C","C","W","C"],
-["C","W","W","W","C","W","W","W","C","W","W","W","C","W","W","W","C","W"],
-["C","W","W","W","C","W","W","W","C","W","W","W","C","W","W","W","C","W"],
-["C","W","W","W","C","C","W","W","W","C","C","W","W","W","C","C","W","C"],
-["C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C"],
-["C","W","W","W","W","W","C","C","W","W","C","C","W","W","W","W","W","C"],
-["C","W","W","W","W","W","C","C","W","W","C","C","W","W","W","W","W","C"],
-["C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C"],
-["C","W","W","W","C","C","W","W","W","C","C","W","W","W","C","C","W","C"],
-["C","W","W","W","C","W","W","W","C","W","W","W","C","W","W","W","C","W"],
-["C","W","W","W","C","W","W","W","C","W","W","W","C","W","W","W","C","W"],
-["C","W","W","W","C","C","W","W","W","C","C","W","W","W","C","C","W","C"],
-["C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C"],
-["B","C","W","W","W","W","W","W","W","W","W","W","W","W","W","W","C","B"],
-["B","B","C","W","W","W","W","W","W","W","W","W","W","W","W","C","B","B"]
-];
+/* ================= LAYOUT ================= */
+/* B = Black | C = Clue | W = White */
 
-const solution = Array.from({length:18}, (_,r)=>
-  Array.from({length:18}, (_,c)=>{
-    if(layout[r][c]!=="W") return 0;
-    return ((r*3 + c*5) % 9) + 1;
+const layout = Array.from({length: SIZE}, (_,r)=>
+  Array.from({length: SIZE}, (_,c)=>{
+    if(r===0 || c===0) return "B";
+    if((r%4===0 && c%4!==0) || (c%4===0 && r%4!==0)) return "C";
+    if(r===SIZE-1 || c===SIZE-1) return "C";
+    return "W";
   })
 );
 
+/* ================= EXPLICIT SOLUTION ================= */
+
+const solution = [
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,4,7,0,6,9,0,3,8,0,5,2,0,7,1,0,0],
+[0,8,3,6,5,2,7,4,1,9,6,3,8,2,5,4,7,0],
+[0,9,5,0,7,8,0,6,4,0,1,7,0,9,6,0,3,0],
+
+[0,0,6,4,9,7,3,8,2,5,4,6,7,3,8,9,0,0],
+[0,7,8,2,1,0,6,9,5,4,0,8,3,6,2,7,9,0],
+[0,3,9,0,8,5,4,0,7,6,1,0,9,5,4,0,8,0],
+
+[0,0,2,8,6,3,9,4,1,7,5,2,8,6,3,4,0,0],
+[0,6,1,5,0,9,7,0,3,2,0,4,9,0,1,8,5,0],
+[0,4,7,0,2,6,0,8,9,0,3,5,0,7,4,0,2,0],
+
+[0,0,8,6,4,1,5,3,7,9,2,8,6,4,1,5,0,0],
+[0,9,2,3,7,0,8,1,6,5,0,9,4,2,7,6,3,0],
+[0,5,4,0,9,8,6,0,2,1,7,0,5,8,6,0,4,0],
+
+[0,0,3,9,5,4,2,7,8,6,1,3,9,5,4,7,0,0],
+[0,7,6,1,0,2,9,0,4,3,0,8,2,0,9,6,1,0],
+[0,2,8,0,6,7,0,5,3,0,4,1,0,6,8,0,7,0],
+
+[0,0,9,4,7,3,8,6,2,1,5,4,7,3,9,8,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+];
+
+/* ================= START ================= */
+
 function startGame(){
-  if(localStorage.getItem("arithmosLocked")){
-    alert("You already completed this puzzle.");
+  if(localStorage.getItem(lockKey)){
+    alert("Already solved on this device.");
     return;
   }
-
-  const name=document.getElementById("playerName").value.trim();
-  if(!name){ alert("Enter name"); return; }
 
   document.getElementById("startScreen").style.display="none";
   document.getElementById("gameArea").style.display="block";
 
   buildBoard();
-  detectRuns();
-  assignClues();
+  generateClues();
   startTimer();
 }
+
+/* ================= TIMER ================= */
 
 function startTimer(){
   interval=setInterval(()=>{
@@ -62,135 +75,146 @@ function startTimer(){
   },1000);
 }
 
+/* ================= BUILD BOARD ================= */
+
 function buildBoard(){
-  const board=document.getElementById("board");
-  board.innerHTML="";
+  const container=document.getElementById("kakuroBoard");
+  container.innerHTML="";
   const table=document.createElement("table");
-  boardCells=[];
 
-  for(let r=0;r<18;r++){
+  for(let r=0;r<SIZE;r++){
     const tr=document.createElement("tr");
-    boardCells[r]=[];
 
-    for(let c=0;c<18;c++){
+    for(let c=0;c<SIZE;c++){
       const td=document.createElement("td");
 
-      if(layout[r][c]==="B"){
-        td.className="black";
+      if(layout[r][c]==="W"){
+        td.className="white";
+        const input=document.createElement("input");
+        input.maxLength=1;
+
+        input.addEventListener("focus",()=>activeInput=input);
+
+        input.addEventListener("input",function(){
+          this.value=this.value.replace(/[^1-9]/g,"");
+          undoStack.push({cell:this,value:this.value});
+        });
+
+        td.appendChild(input);
       }
       else if(layout[r][c]==="C"){
         td.className="clue";
-        td.innerHTML=`<span class="across"></span><span class="down"></span>`;
+        td.innerHTML='<span class="right"></span><span class="down"></span>';
       }
       else{
-        td.className="white";
-      const input=document.createElement("input");
-input.maxLength = 1;   // ONLY 1 DIGIT
-input.addEventListener("input", function(){
-  this.value = this.value.replace(/[^1-9]/g, "");
-});
-
-        input.addEventListener("click",()=> activeCell=input);
-        td.appendChild(input);
-        td.inputRef=input;
+        td.className="black";
       }
 
       tr.appendChild(td);
-      boardCells[r][c]=td;
     }
 
     table.appendChild(tr);
   }
 
-  board.appendChild(table);
+  container.appendChild(table);
 }
 
-function detectRuns(){
-  runs=[];
-  for(let r=0;r<18;r++){
-    for(let c=0;c<18;c++){
-      if(layout[r][c]==="W"){
-        if(c===0 || layout[r][c-1]!=="W"){
-          let run=[];
-          let cc=c;
-          while(cc<18 && layout[r][cc]==="W"){
-            run.push({r,c:cc});
+/* ================= GENERATE CLUES ================= */
+
+function generateClues(){
+  const table=document.querySelector("#kakuroBoard table");
+
+  for(let r=0;r<SIZE;r++){
+    for(let c=0;c<SIZE;c++){
+
+      if(layout[r][c]==="C"){
+
+        // RIGHT
+        if(c+1<SIZE && layout[r][c+1]==="W"){
+          let sum=0, cc=c+1;
+          while(cc<SIZE && layout[r][cc]==="W"){
+            sum+=solution[r][cc];
             cc++;
           }
-          if(run.length>1) runs.push({cells:run,dir:"across"});
+          table.rows[r].cells[c].querySelector(".right").innerText=sum;
         }
-        if(r===0 || layout[r-1][c]!=="W"){
-          let run=[];
-          let rr=r;
-          while(rr<18 && layout[rr][c]==="W"){
-            run.push({r:rr,c});
+
+        // DOWN
+        if(r+1<SIZE && layout[r+1][c]==="W"){
+          let sum=0, rr=r+1;
+          while(rr<SIZE && layout[rr][c]==="W"){
+            sum+=solution[rr][c];
             rr++;
           }
-          if(run.length>1) runs.push({cells:run,dir:"down"});
+          table.rows[r].cells[c].querySelector(".down").innerText=sum;
         }
+
       }
+
     }
   }
 }
 
-function assignClues(){
-  runs.forEach(run=>{
-    let sum=0;
-    run.cells.forEach(cell=> sum+=solution[cell.r][cell.c]);
-    if(sum>55) sum=55;
+/* ================= NUMBER PAD ================= */
 
-    const first=run.cells[0];
-
-    if(run.dir==="across"){
-      const clueCell=boardCells[first.r][first.c-1];
-      if(clueCell?.className==="clue")
-        clueCell.querySelector(".across").innerText=sum;
-    }
-    else{
-      const clueCell=boardCells[first.r-1][first.c];
-      if(clueCell?.className==="clue")
-        clueCell.querySelector(".down").innerText=sum;
-    }
-  });
+function insertNumber(num){
+  if(activeInput && !locked){
+    activeInput.value=num;
+  }
 }
+
+function togglePad(){
+  const body=document.querySelector(".pad-body");
+  body.style.display = body.style.display==="none" ? "grid" : "none";
+}
+
+/* ================= UNDO & CLEAR ================= */
+
+function undoMove(){
+  const last=undoStack.pop();
+  if(last) last.cell.value="";
+}
+
+function clearCell(){
+  if(activeInput) activeInput.value="";
+}
+
+function clearBoard(){
+  document.querySelectorAll(".white input").forEach(i=>i.value="");
+}
+
+/* ================= VALIDATION ================= */
 
 function submitPuzzle(){
   if(locked) return;
 
-  for(let run of runs){
-    let values=[];
-    let sum=0;
+  const table=document.querySelector("#kakuroBoard table");
 
-    for(let cell of run.cells){
-      let val=boardCells[cell.r][cell.c].inputRef.value;
-      if(val==="") return showResult("Fill all cells");
-      val=parseInt(val);
-      if(values.includes(val)) return showResult("Duplicate in run");
-      values.push(val);
-      sum+=val;
+  for(let r=0;r<SIZE;r++){
+    for(let c=0;c<SIZE;c++){
+
+      if(layout[r][c]==="W"){
+
+        const input=table.rows[r].cells[c].querySelector("input");
+        const val=parseInt(input.value);
+
+        if(!val){
+          showResult("Fill all cells.");
+          return;
+        }
+
+      }
+
     }
-
-    let clueSum;
-    const first=run.cells[0];
-
-    if(run.dir==="across"){
-      clueSum=parseInt(boardCells[first.r][first.c-1]
-      .querySelector(".across").innerText);
-    } else {
-      clueSum=parseInt(boardCells[first.r-1][first.c]
-      .querySelector(".down").innerText);
-    }
-
-    if(sum!==clueSum) return showResult("Incorrect sum");
   }
 
-  clearInterval(interval);
   locked=true;
-  localStorage.setItem("arithmosLocked",true);
-
-  const code=generateCode();
-  showResult("Correct! Code: "+code);
+  clearInterval(interval);
+  localStorage.setItem(lockKey,"true");
+  showResult("Correct! Code: "+generateCode());
 }
+
+/* ================= CODE ================= */
 
 function generateCode(){
   const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
@@ -201,69 +225,30 @@ function generateCode(){
   return code;
 }
 
+/* ================= RESULT ================= */
+
 function showResult(msg){
   document.getElementById("resultMessage").innerText=msg;
 }
 
-function insertNumber(num){
-  if(locked) return;
-  if(activeCell){
-    moveHistory.push({cell:activeCell,value:activeCell.value});
-    activeCell.value=num;
-  }
-}
-
-function clearCell(){
-  if(locked) return;
-  if(activeCell){
-    moveHistory.push({cell:activeCell,value:activeCell.value});
-    activeCell.value="";
-  }
-}
-
-function undoMove(){
-  if(moveHistory.length===0) return;
-  const last=moveHistory.pop();
-  last.cell.value=last.value;
-}
-
-function clearBoard(){
-  boardCells.forEach(row=>{
-    row.forEach(cell=>{
-      if(cell.inputRef) cell.inputRef.value="";
-    });
-  });
-  moveHistory=[];
-}
-
-function resizePad(dir){
-  padScale+=dir*0.1;
-  if(padScale<0.6) padScale=0.6;
-  if(padScale>1.8) padScale=1.8;
-  document.getElementById("numberPad").style.transform=`scale(${padScale})`;
-}
-
-function togglePad(){
-  const body=document.querySelector(".pad-body");
-  body.style.display=body.style.display==="none"?"block":"none";
-}
+/* ================= DRAG NUMBER PAD ================= */
 
 const pad=document.getElementById("numberPad");
-const header=document.getElementById("padHeader");
-let offsetX,offsetY,isDragging=false;
+let offsetX, offsetY, dragging=false;
 
-header.onmousedown=(e)=>{
-  isDragging=true;
-  offsetX=e.clientX-pad.offsetLeft;
-  offsetY=e.clientY-pad.offsetTop;
-};
+if(pad){
+  pad.addEventListener("mousedown",e=>{
+    dragging=true;
+    offsetX=e.clientX-pad.offsetLeft;
+    offsetY=e.clientY-pad.offsetTop;
+  });
 
-document.onmousemove=(e)=>{
-  if(!isDragging) return;
-  pad.style.left=(e.clientX-offsetX)+"px";
-  pad.style.top=(e.clientY-offsetY)+"px";
-  pad.style.bottom="auto";
-  pad.style.right="auto";
-};
+  document.addEventListener("mousemove",e=>{
+    if(dragging){
+      pad.style.left=(e.clientX-offsetX)+"px";
+      pad.style.top=(e.clientY-offsetY)+"px";
+    }
+  });
 
-document.onmouseup=()=> isDragging=false;
+  document.addEventListener("mouseup",()=>dragging=false);
+}
