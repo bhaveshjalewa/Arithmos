@@ -178,3 +178,13 @@ function togglePad(){
   const body=document.querySelector(".pad-body");
   body.style.display=body.style.display==="none"?"block":"none";
 }
+let padScale = 1;
+
+function resizePad(direction){
+  padScale += direction * 0.1;
+
+  if(padScale < 0.6) padScale = 0.6;
+  if(padScale > 1.8) padScale = 1.8;
+
+  pad.style.transform = `scale(${padScale})`;
+}
