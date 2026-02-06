@@ -11,42 +11,50 @@
   <h1>Arithmos – Vitta Vibhava</h1>
 </header>
 
+<!-- START SCREEN -->
 <div id="startScreen">
   <h2>Enter Your Name</h2>
   <input type="text" id="playerName" placeholder="Your Name">
   <button onclick="startGame()">Start</button>
 </div>
 
+<!-- GAME AREA -->
 <div id="gameArea" style="display:none;">
+
   <div id="timer">Time: 00:00</div>
+
   <div id="board"></div>
-</div>
 
-<!-- NUMBER PAD -->
-<div id="numberPad">
-  <div class="pad-header" id="padHeader">
-    <span>Number Pad</span>
-    <div>
-      <button onclick="resizePad(1)">+</button>
-      <button onclick="resizePad(-1)">−</button>
-      <button onclick="togglePad()">_</button>
+  <button onclick="submitPuzzle()">Submit</button>
+
+  <p id="resultMessage"></p>
+
+  <!-- NUMBER PAD INSIDE GAME -->
+  <div id="numberPad">
+    <div class="pad-header" id="padHeader">
+      <span>Number Pad</span>
+      <div>
+        <button onclick="resizePad(1)">+</button>
+        <button onclick="resizePad(-1)">−</button>
+        <button onclick="togglePad()">_</button>
+      </div>
+    </div>
+    <div class="pad-body">
+      <div class="pad-grid">
+        <button onclick="insertNumber(1)">1</button>
+        <button onclick="insertNumber(2)">2</button>
+        <button onclick="insertNumber(3)">3</button>
+        <button onclick="insertNumber(4)">4</button>
+        <button onclick="insertNumber(5)">5</button>
+        <button onclick="insertNumber(6)">6</button>
+        <button onclick="insertNumber(7)">7</button>
+        <button onclick="insertNumber(8)">8</button>
+        <button onclick="insertNumber(9)">9</button>
+      </div>
+      <button onclick="clearCell()">Clear</button>
     </div>
   </div>
 
-  <div class="pad-body">
-    <div class="pad-grid">
-      <button onclick="insertNumber(1)">1</button>
-      <button onclick="insertNumber(2)">2</button>
-      <button onclick="insertNumber(3)">3</button>
-      <button onclick="insertNumber(4)">4</button>
-      <button onclick="insertNumber(5)">5</button>
-      <button onclick="insertNumber(6)">6</button>
-      <button onclick="insertNumber(7)">7</button>
-      <button onclick="insertNumber(8)">8</button>
-      <button onclick="insertNumber(9)">9</button>
-    </div>
-    <button onclick="clearCell()">Clear</button>
-  </div>
 </div>
 
 <script src="script.js"></script>
