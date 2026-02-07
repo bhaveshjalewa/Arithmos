@@ -320,3 +320,69 @@ header{
 .pad-body > button:hover{
   background:#e5e7eb;
 }
+/* ================= EXAMPLE KAKURO FIX ================= */
+
+.example-grid{
+  border-collapse:collapse;
+  margin:20px auto;
+}
+
+.example-grid td{
+  width:42px;
+  height:42px;
+  border:2px solid #000;
+  position:relative;
+  box-sizing:border-box;
+}
+
+/* Black cell */
+.black-cell{
+  background:#d6d3d1;
+}
+
+/* White example cell */
+.white-example{
+  background:white;
+  text-align:center;
+  font-weight:bold;
+  font-size:16px;
+}
+
+/* Clue cell */
+.clue-example{
+  background:#d6d3d1;
+  position:relative;
+}
+
+/* Perfect centered diagonal */
+.clue-example::after{
+  content:"";
+  position:absolute;
+  width:140%;
+  height:2px;
+  background:black;
+  top:50%;
+  left:-20%;
+  transform:rotate(45deg);
+  transform-origin:center;
+}
+
+/* Clue numbers */
+.clue-example span{
+  position:absolute;
+  font-size:12px;
+  font-weight:800;
+  color:black;
+}
+
+/* Across → top right */
+.clue-example .right{
+  top:4px;
+  right:6px;
+}
+
+/* Down → bottom left */
+.clue-example .down{
+  bottom:4px;
+  left:6px;
+}
