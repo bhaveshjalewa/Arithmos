@@ -17,6 +17,79 @@ header{
   border-bottom:3px solid #b8aa96;
 }
 
+/* ================= EXAMPLE BOARD ================= */
+
+.example-wrapper{
+  margin-top:25px;
+  display:flex;
+  justify-content:center;
+}
+
+.example-grid{
+  border-collapse:collapse;
+  background:white;
+}
+
+.example-grid td{
+  width:42px;
+  height:42px;
+  border:2px solid #000;   /* SAME AS GAME */
+  position:relative;
+  box-sizing:border-box;
+  text-align:center;
+  font-weight:bold;
+}
+
+/* WHITE CELL (Example) */
+.white-example{
+  background:white;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* BLACK / CLUE STYLE SAME AS GAME */
+.black-cell,
+.clue-example{
+  background:#d6d3d1;  /* SAME GREY */
+  position:relative;
+}
+
+/* SAME CENTER DIAGONAL */
+.black-cell::after,
+.clue-example::after{
+  content:"";
+  position:absolute;
+  width:140%;
+  height:2px;
+  background:black;
+  top:50%;
+  left:-20%;
+  transform:rotate(45deg);
+  transform-origin:center;
+}
+
+/* CLUE NUMBERS EXACT SAME STYLE */
+.clue-example span{
+  position:absolute;
+  font-size:12px;
+  font-weight:800;
+  color:black;
+}
+
+/* Across → TOP RIGHT */
+.clue-example .right{
+  top:4px;
+  right:6px;
+}
+
+/* Down → BOTTOM LEFT */
+.clue-example .down{
+  bottom:4px;
+  left:6px;
+}
+
 /* ================= START SCREEN ================= */
 
 #startScreen{
