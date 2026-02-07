@@ -88,9 +88,8 @@ header{
 .white-example{
   background:white;
   font-size:18px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  text-align:center;
+  line-height:42px;   /* match cell height */
 }
 
 /* Grey clue/black cell */
