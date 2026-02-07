@@ -219,3 +219,20 @@ header{
   border:1px solid #aaa;
   background:#f3f4f6;
 }
+
+/* FORCE FULL GRID BORDERS */
+
+#board table{
+  border-collapse:collapse;
+}
+
+#board td{
+  border:2px solid #000 !important;   /* force black border */
+}
+
+/* Explicit white cell border */
+
+.white{
+  background:white;
+  border:2px solid #000 !important;
+}
