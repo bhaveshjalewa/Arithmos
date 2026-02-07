@@ -45,10 +45,10 @@ header{
   font-size:18px;
 }
 
-//* ================= BOARD ================= */
+/* ================= BOARD ================= */
 
 #board table{
-  border-collapse:collapse;   /* ensures full grid lines */
+  border-collapse:collapse;
   margin:20px auto;
   background:white;
 }
@@ -56,81 +56,16 @@ header{
 #board td{
   width:40px;
   height:40px;
-  border:2px solid #000;      /* FULL border on every cell */
+  border:2px solid #000;      /* STRONG BLACK BORDER */
   position:relative;
   box-sizing:border-box;
 }
 
-/* WHITE CELL */
-.white{
-  background:white;
-}
-
-/* BLACK CELL */
-.black{
-  background:black;
-}
-
-/* CLUE CELL */
-.clue{
-  background:#e5e7eb;
-  position:relative;
-}
-
-/* ================= CELL TYPES ================= */
+/* ================= WHITE CELL ================= */
 
 .white{
   background:white;
 }
-
-.black{
-  background:black;
-}
-
-/* ================= CLUE CELLS ================= */
-
-.clue{
-  background:#e5e7eb;
-  position:relative;
-  border:2px solid #000;   /* ensure box visible */
-}
-
-/* Clean center diagonal */
-.clue::after{
-  content:"";
-  position:absolute;
-  width:140%;
-  height:2px;
-  background:black;
-  top:50%;
-  left:-20%;
-  transform:rotate(45deg);
-  transform-origin:center;
-}
-
-
-/* Clue numbers */
-.clue span{
-  position:absolute;
-  font-size:11px;
-  font-weight:800;
-  color:black;
-}
-
-/* RIGHT (ACROSS) NUMBER → TOP RIGHT */
-.across{
-  top:3px;
-  right:5px;
-}
-
-/* DOWN NUMBER → BOTTOM LEFT */
-.down{
-  bottom:3px;
-  left:5px;
-}
-
-
-/* ================= INPUT ================= */
 
 .white input{
   width:100%;
@@ -140,6 +75,56 @@ header{
   font-size:18px;
   font-weight:bold;
   outline:none;
+  background:transparent;
+}
+
+/* ================= BLACK CELL ================= */
+
+.black{
+  background:#e5e7eb;   /* light grey */
+  position:relative;
+}
+
+/* ================= CLUE CELL ================= */
+
+.clue{
+  background:#d1d5db;   /* slightly darker */
+  position:relative;
+  overflow:hidden;
+}
+
+/* PERFECT CENTER DIAGONAL */
+
+.clue::after,
+.black::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:150%;
+  height:2px;
+  background:black;
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+
+/* ================= CLUE NUMBERS ================= */
+
+.clue span{
+  position:absolute;
+  font-size:11px;
+  font-weight:800;
+  color:black;
+  pointer-events:none;
+}
+
+.across{
+  top:3px;
+  right:5px;
+}
+
+.down{
+  bottom:3px;
+  left:5px;
 }
 
 /* ================= BUTTONS ================= */
@@ -218,21 +203,4 @@ header{
   border-radius:5px;
   border:1px solid #aaa;
   background:#f3f4f6;
-}
-
-/* FORCE FULL GRID BORDERS */
-
-#board table{
-  border-collapse:collapse;
-}
-
-#board td{
-  border:2px solid #000 !important;   /* force black border */
-}
-
-/* Explicit white cell border */
-
-.white{
-  background:white;
-  border:2px solid #000 !important;
 }
