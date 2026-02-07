@@ -141,55 +141,65 @@ td{
   position:fixed;
   bottom:20px;
   right:20px;
-  width:220px;
+  width:180px;
   background:white;
   color:black;
-  border-radius:12px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.6);
+  border-radius:10px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.6);
   resize:both;
-  overflow:auto;
+  overflow:hidden;
 }
 
 .pad-header{
-  background:#0f172a;
+  background:#111827;
   color:white;
-  padding:8px;
-  cursor:move;
+  padding:6px 10px;
+  font-weight:600;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  font-weight:bold;
+  cursor:move;
+  user-select:none;
 }
 
 .pad-header button{
-  background:#334155;
-  color:white;
+  background:#374151;
   border:none;
+  color:white;
   padding:2px 8px;
-  cursor:pointer;
   border-radius:4px;
+  cursor:pointer;
 }
 
 .pad-body{
-  padding:12px;
+  padding:10px;
 }
 
 .pad-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:8px;
+  gap:6px;
 }
 
 .pad-grid button{
-  padding:10px;
-  font-size:16px;
+  padding:8px;
+  font-size:15px;
   font-weight:bold;
-  border-radius:6px;
-  border:1px solid #999;
-  background:#f1f5f9;
+  border-radius:5px;
+  border:1px solid #aaa;
+  background:#f3f4f6;
   cursor:pointer;
 }
 
 .pad-grid button:hover{
-  background:#e2e8f0;
+  background:#e5e7eb;
+}
+
+.pad-body > button{
+  margin-top:8px;
+  width:100%;
+  padding:6px;
+  border-radius:5px;
+  border:1px solid #aaa;
+  background:#f3f4f6;
 }
