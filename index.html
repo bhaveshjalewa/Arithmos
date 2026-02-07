@@ -68,26 +68,28 @@
   <p id="resultMessage"></p>
 
   <!-- NUMBER PAD -->
-  <div id="numberPad">
-    <div class="pad-header" id="padHeader">
-      <span>Number Pad</span>
-      <button onclick="togglePad()">_</button>
-    </div>
-    <div class="pad-body">
-      <div class="pad-grid">
-        <button onclick="insertNumber(1)">1</button>
-        <button onclick="insertNumber(2)">2</button>
-        <button onclick="insertNumber(3)">3</button>
-        <button onclick="insertNumber(4)">4</button>
-        <button onclick="insertNumber(5)">5</button>
-        <button onclick="insertNumber(6)">6</button>
-        <button onclick="insertNumber(7)">7</button>
-        <button onclick="insertNumber(8)">8</button>
-        <button onclick="insertNumber(9)">9</button>
-      </div>
-      <button onclick="clearCell()">Clear Cell</button>
-    </div>
+<div id="numberPad">
+  <div class="pad-header" id="padHeader">
+    <span>Number Pad</span>
+    <button id="toggleBtn">–</button>
   </div>
+
+  <div class="pad-body" id="padBody">
+    <div class="pad-grid">
+      <button onclick="insertNumber(1)">1</button>
+      <button onclick="insertNumber(2)">2</button>
+      <button onclick="insertNumber(3)">3</button>
+      <button onclick="insertNumber(4)">4</button>
+      <button onclick="insertNumber(5)">5</button>
+      <button onclick="insertNumber(6)">6</button>
+      <button onclick="insertNumber(7)">7</button>
+      <button onclick="insertNumber(8)">8</button>
+      <button onclick="insertNumber(9)">9</button>
+    </div>
+    <button onclick="clearCell()">Clear Cell</button>
+  </div>
+</div>
+
 
 </div>
 
