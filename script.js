@@ -211,3 +211,43 @@ function insertNumber(num){
 function clearCell(){
   if(activeInput) activeInput.value="";
 }
+
+/* ================= DRAG ================= */
+
+const pad = document.getElementById("numberPad");
+const header = document.getElementById("padHeader");
+let offsetX, offsetY, dragging=false;
+
+header.addEventListener("mousedown", (e)=>{
+  dragging = true;
+  offsetX = e.clientX - pad.offsetLeft;
+  offsetY = e.clientY - pad.offsetTop;
+});
+
+document.addEventListener("mousemove", (e)=>{
+  if(dragging){
+    pad.style.left = (e.clientX - offsetX) + "px";
+    pad.style.top  = (e.clientY - offsetY) + "px";
+    pad.style.bottom = "auto";
+    pad.style.right = "auto";
+  }
+});
+
+document.addEventListener("mouseup", ()=>{
+  dragging = false;
+});
+
+/* ================= MINIMIZE ================= */
+
+const toggleBtn = document.getElementById("toggleBtn");
+const padBody = document.getElementById("padBody");
+
+toggleBtn.addEventListener("click", ()=>{
+  if(padBody.style.display==="none"){
+    padBody.style.display="block";
+    toggleBtn.textContent="–";
+  } else {
+    padBody.style.display="none";
+    toggleBtn.textContent="+";
+  }
+});
