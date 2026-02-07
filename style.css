@@ -3,16 +3,18 @@
 body{
   margin:0;
   font-family:Segoe UI, sans-serif;
-  background:#0f172a;
-  color:white;
+  background:#f5efe6;   /* Soft Beige */
+  color:#1f2937;
   text-align:center;
 }
 
 header{
-  background:#111827;
-  padding:15px;
-  font-size:22px;
+  background:#e6dccf;
+  padding:18px;
+  font-size:28px;
   font-weight:bold;
+  color:#111827;
+  border-bottom:3px solid #b8aa96;
 }
 
 /* ================= START SCREEN ================= */
@@ -20,16 +22,39 @@ header{
 #startScreen{
   width:850px;
   margin:40px auto;
-  background:white;
-  color:black;
+  background:#ffffff;
+  color:#111827;
   padding:30px;
-  border-radius:12px;
+  border-radius:14px;
   text-align:left;
+  box-shadow:0 6px 20px rgba(0,0,0,0.12);
 }
 
 #nameSection{
   text-align:center;
   margin-bottom:25px;
+}
+
+#nameSection input{
+  padding:8px 12px;
+  font-size:16px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  width:220px;
+}
+
+#nameSection button{
+  padding:8px 16px;
+  font-weight:bold;
+  background:#b45309;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+#nameSection button:hover{
+  background:#92400e;
 }
 
 #instructions h3{
@@ -39,7 +64,7 @@ header{
 /* ================= TIMER ================= */
 
 #timer{
-  color:#facc15;
+  color:#b45309;
   font-weight:bold;
   margin:15px;
   font-size:18px;
@@ -54,9 +79,9 @@ header{
 }
 
 #board td{
-  width:40px;
-  height:40px;
-  border:2px solid #000;      /* STRONG BLACK BORDER */
+  width:42px;
+  height:42px;
+  border:2px solid #000;      /* FULL GRID BORDERS */
   position:relative;
   box-sizing:border-box;
 }
@@ -78,62 +103,65 @@ header{
   background:transparent;
 }
 
-/* ================= BLACK CELL ================= */
+/* ================= BLACK / CLUE STYLE ================= */
 
-.black{
-  background:#e5e7eb;   /* light grey */
-  position:relative;
-}
-
-/* ================= CLUE CELL ================= */
-
+/* Grey background for clue & black */
+.black,
 .clue{
-  background:#d1d5db;   /* slightly darker */
+  background:#d6d3d1;
   position:relative;
-  overflow:hidden;
 }
 
-/* PERFECT CENTER DIAGONAL */
-
-.clue::after,
-.black::after{
+/* Center diagonal line */
+.black::after,
+.clue::after{
   content:"";
   position:absolute;
-  top:50%;
-  left:50%;
-  width:150%;
+  width:140%;
   height:2px;
   background:black;
-  transform:translate(-50%,-50%) rotate(45deg);
+  top:50%;
+  left:-20%;
+  transform:rotate(45deg);
+  transform-origin:center;
 }
 
 /* ================= CLUE NUMBERS ================= */
 
 .clue span{
   position:absolute;
-  font-size:11px;
+  font-size:12px;
   font-weight:800;
   color:black;
-  pointer-events:none;
 }
 
+/* Across (horizontal sum) → TOP RIGHT */
 .across{
-  top:3px;
-  right:5px;
+  top:4px;
+  right:6px;
 }
 
+/* Down (vertical sum) → BOTTOM LEFT */
 .down{
-  bottom:3px;
-  left:5px;
+  bottom:4px;
+  left:6px;
 }
 
 /* ================= BUTTONS ================= */
 
 .controls button{
-  margin:8px;
-  padding:6px 14px;
+  margin:10px;
+  padding:8px 18px;
   font-weight:bold;
+  background:#b45309;
+  color:white;
+  border:none;
+  border-radius:6px;
   cursor:pointer;
+}
+
+.controls button:hover{
+  background:#92400e;
 }
 
 /* ================= NUMBER PAD ================= */
@@ -142,29 +170,35 @@ header{
   position:fixed;
   bottom:20px;
   right:20px;
-  width:180px;
+  width:220px;
   background:white;
   color:black;
-  border-radius:10px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.6);
+  border-radius:12px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);
   resize:both;
-  overflow:hidden;
+  overflow:auto;
+  min-width:200px;
+  min-height:220px;
 }
 
+/* Header */
 .pad-header{
-  background:#111827;
+  background:#b45309;
   color:white;
-  padding:6px 10px;
+  padding:8px 12px;
   font-weight:600;
   display:flex;
   justify-content:space-between;
   align-items:center;
   cursor:move;
   user-select:none;
+  border-top-left-radius:12px;
+  border-top-right-radius:12px;
 }
 
+/* Header button */
 .pad-header button{
-  background:#374151;
+  background:#92400e;
   border:none;
   color:white;
   padding:2px 8px;
@@ -172,22 +206,25 @@ header{
   cursor:pointer;
 }
 
+/* Body */
 .pad-body{
-  padding:10px;
+  padding:12px;
 }
 
+/* Grid */
 .pad-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:6px;
+  gap:8px;
 }
 
+/* Pad Buttons */
 .pad-grid button{
-  padding:8px;
-  font-size:15px;
+  padding:10px;
+  font-size:16px;
   font-weight:bold;
-  border-radius:5px;
-  border:1px solid #aaa;
+  border-radius:6px;
+  border:1px solid #ccc;
   background:#f3f4f6;
   cursor:pointer;
 }
@@ -196,11 +233,17 @@ header{
   background:#e5e7eb;
 }
 
+/* Clear Cell Button */
 .pad-body > button{
-  margin-top:8px;
+  margin-top:10px;
   width:100%;
-  padding:6px;
-  border-radius:5px;
-  border:1px solid #aaa;
+  padding:8px;
+  border-radius:6px;
+  border:1px solid #ccc;
   background:#f3f4f6;
+  cursor:pointer;
+}
+
+.pad-body > button:hover{
+  background:#e5e7eb;
 }
