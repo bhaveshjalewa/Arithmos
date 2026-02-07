@@ -11,83 +11,82 @@
   <h1>Arithmos</h1>
 </header>
 
-<!-- START SCREEN -->
+<!-- ================= START SCREEN ================= -->
+
 <div id="startScreen">
+
     <button onclick="startGame()">Start</button>
-  </div>
 
-  <div id="instructions">
+    <div id="instructions">
 
-    <h3>How To Play</h3>
-    <ul>
-      <li>Each clue cell contains two numbers.</li>
-      <li>Top-right number → Horizontal (Across) sum.</li>
-      <li>Bottom-left number → Vertical (Down) sum.</li>
-      <li>Numbers 1–9 only.</li>
-      <li>No duplicate number allowed in any run.</li>
-      <li>All white cells must be filled.</li>
-    </ul>
+        <h3>How To Play</h3>
+        <ul>
+          <li>Each clue cell contains two numbers.</li>
+          <li>Top-right number → Horizontal (Across) sum.</li>
+          <li>Bottom-left number → Vertical (Down) sum.</li>
+          <li>Numbers 1–9 only.</li>
+          <li>No duplicate number allowed in any run.</li>
+          <li>All white cells must be filled.</li>
+        </ul>
 
-    <h3>Controls</h3>
-    <ul>
-      <li>Click a cell to select it.</li>
-      <li>Use number pad or keyboard (1–9).</li>
-      <li>Undo button reverses last move.</li>
-      <li>Clear button resets board.</li>
-    </ul>
+        <h3>Controls</h3>
+        <ul>
+          <li>Click a cell to select it.</li>
+          <li>Use number pad or keyboard (1–9).</li>
+          <li>Undo button reverses last move.</li>
+          <li>Clear button resets board.</li>
+        </ul>
 
-    <h3>Competition Rules</h3>
-    <ul>
-      <li>Unlimited wrong attempts allowed.</li>
-      <li>Timer starts when game begins.</li>
-      <li>After correct submission, board locks.</li>
-      <li>52-character secure code generated.</li>
-    </ul>
+        <h3>Competition Rules</h3>
+        <ul>
+          <li>Unlimited wrong attempts allowed.</li>
+          <li>Timer starts when game begins.</li>
+          <li>After correct submission, board locks.</li>
+          <li>52-character secure code generated.</li>
+        </ul>
 
-    <!-- ================= SOLVED KAKURO EXAMPLE ================= -->
+        <!-- Example -->
+        <h3>Example (Solved Kakuro)</h3>
 
-    <h3>Example (Solved Kakuro)</h3>
+        <div class="example-wrapper">
+          <table class="example-grid">
 
-    <div class="example-wrapper">
-      <table class="example-grid">
+            <tr>
+              <td class="black-cell"></td>
+              <td class="clue-example">
+                <span class="down">15</span>
+              </td>
+              <td class="clue-example">
+                <span class="down">13</span>
+              </td>
+            </tr>
 
-        <!-- Row 1 -->
-        <tr>
-          <td class="black-cell"></td>
-          <td class="clue-example">
-            <span class="down">15</span>
-          </td>
-          <td class="clue-example">
-            <span class="down">13</span>
-          </td>
-        </tr>
+            <tr>
+              <td class="clue-example">
+                <span class="down">9</span>
+                <span class="right">15</span>
+              </td>
+              <td class="white-example">8</td>
+              <td class="white-example">7</td>
+            </tr>
 
-        <!-- Row 2 -->
-        <tr>
-          <td class="clue-example">
-            <span class="down">9</span>
-            <span class="right">15</span>
-          </td>
-          <td class="white-example">8</td>
-          <td class="white-example">7</td>
-        </tr>
+            <tr>
+              <td class="white-example">9</td>
+              <td class="white-example">7</td>
+              <td class="white-example">6</td>
+            </tr>
 
-        <!-- Row 3 -->
-        <tr>
-          <td class="white-example">9</td>
-          <td class="white-example">7</td>
-          <td class="white-example">6</td>
-        </tr>
+          </table>
+        </div>
 
-      </table>
     </div>
 
-  </div> <!-- ✅ CLOSE instructions -->
-</div>   <!-- ✅ CLOSE startScreen -->
+</div>
+<!-- ================= END START SCREEN ================= -->
 
 
+<!-- ================= GAME AREA ================= -->
 
-<!-- GAME AREA -->
 <div id="gameArea" style="display:none;">
 
   <div id="timer">Time: 00:00</div>
