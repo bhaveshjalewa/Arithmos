@@ -225,3 +225,18 @@ if(pad){
 
   document.addEventListener("mouseup",()=>dragging=false);
 }
+
+/* ================= NUMBER PAD TOGGLE ================= */
+
+function togglePad(){
+  const body = document.querySelector(".pad-body");
+  const pad  = document.getElementById("numberPad");
+
+  if(body.style.display === "none"){
+    body.style.display = "block";
+    pad.style.height = "auto";
+  } else {
+    body.style.display = "none";
+    pad.style.height = "40px";
+  }
+}
