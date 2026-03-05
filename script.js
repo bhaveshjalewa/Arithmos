@@ -9,6 +9,14 @@ let activeInput = null;
 let locked = false;
 let undoStack = [];
 
+/* ================= ENCODED SOLUTION ================= */
+/* Original solution encoded to hide direct visibility */
+
+const encodedSolution =
+"WzAsMCwwLDAsMCwwLDAsMCwwLDBdLFswLDAsNywxLDAsMSwzLDcsMCwwXSxbMCwwLDYsNSwyLDMsNyw5LDEsMF0sWzAsMyw4LDIsMSwwLDAsOCw5LDRdLFswLDgsOSw2LDMsMSwwLDQsMiwxXSxbMCwwLDAsOSw0LDIsMSwwLDYsMl0sWzAsMyw2LDAsNSw2LDIsMCw4LDNdLFswLDQsOSwwLDYsOCwzLDEsMCwwXSxbMCwyLDQsOSwwLDksNCw4LDYsMV0sWzAsMSwyLDgsMCwwLDcsOSw4LDVdLFswLDAsMSwyLDQsMyw1LDcsOSwwXSxbMCwwLDAsMyw5LDgsMCw1LDEsMF0=";
+
+const solution = JSON.parse("[" + atob(encodedSolution) + "]");
+
 /* ================= LAYOUT ================= */
 
 const layoutText = [
@@ -26,23 +34,6 @@ const layoutText = [
 "BBCWWWCWWB"
 ];
 
-/* ================= SOLUTION ================= */
-
-const solution = [
-[0,0,0,0,0,0,0,0,0,0],
-[0,0,7,1,0,1,3,7,0,0],
-[0,0,6,5,2,3,7,9,1,0],
-[0,3,8,2,1,0,0,8,9,4],
-[0,8,9,6,3,1,0,4,2,1],
-[0,0,0,9,4,2,1,0,6,2],
-[0,3,6,0,5,6,2,0,8,3],
-[0,4,9,0,6,8,3,1,0,0],
-[0,2,4,9,0,9,4,8,6,1],
-[0,1,2,8,0,0,7,9,8,5],
-[0,0,1,2,4,3,5,7,9,0],
-[0,0,0,3,9,8,0,5,1,0]
-];
-
 /* ================= START ================= */
 
 function startGame(){
@@ -56,10 +47,10 @@ function startGame(){
 /* ================= TIMER ================= */
 
 function startTimer(){
-  interval=setInterval(()=>{
+  interval = setInterval(()=>{
     timer++;
-    let m=Math.floor(timer/60).toString().padStart(2,'0');
-    let s=(timer%60).toString().padStart(2,'0');
+    let m = Math.floor(timer/60).toString().padStart(2,'0');
+    let s = (timer%60).toString().padStart(2,'0');
     document.getElementById("timer").innerText=`Time: ${m}:${s}`;
   },1000);
 }
@@ -67,21 +58,19 @@ function startTimer(){
 /* ================= BUILD BOARD ================= */
 
 function buildBoard(){
-  const board=document.getElementById("board");
+  const board = document.getElementById("board");
   board.innerHTML="";
-  const table=document.createElement("table");
+  const table = document.createElement("table");
 
   for(let r=0;r<ROWS;r++){
     const tr=document.createElement("tr");
 
     for(let c=0;c<COLS;c++){
       const td=document.createElement("td");
-
       const type = layoutText[r][c];
 
       if(type==="W"){
         td.className="white";
-
         const input=document.createElement("input");
         input.maxLength=1;
 
@@ -89,7 +78,7 @@ function buildBoard(){
 
         input.addEventListener("input",function(){
           this.value=this.value.replace(/[^1-9]/g,"");
-          undoStack.push({cell:this});
+          undoStack.push(this);
         });
 
         td.appendChild(input);
@@ -144,7 +133,6 @@ function generateClues(){
         }
 
       }
-
     }
   }
 }
@@ -152,48 +140,47 @@ function generateClues(){
 /* ================= SUBMIT ================= */
 
 function submitPuzzle(){
+  if(locked) return;
+
   const table=document.querySelector("#board table");
 
   for(let r=0;r<ROWS;r++){
     for(let c=0;c<COLS;c++){
 
       if(layoutText[r][c]==="W"){
+        const input=table.rows[r].cells[c].querySelector("input");
+        const val=parseInt(input.value);
 
-        const input = table.rows[r].cells[c].querySelector("input");
-        const val = parseInt(input.value);
-
-        if(val !== solution[r][c]){
+        if(val!==solution[r][c]){
           document.getElementById("resultMessage").innerText="Incorrect.";
           return;
         }
-
       }
-
     }
   }
 
   clearInterval(interval);
   locked=true;
   document.getElementById("resultMessage").innerText=
-  "Correct! Code: "+generateCode();
+    "Correct! Code: "+generateCode();
 }
 
-/* ================= CODE ================= */
+/* ================= FIXED CODE ================= */
 
 function generateCode(){
-  const chars="Z9@vL#3xT!7qR$2mP^8yW*4kB%1dF&6nH?0cJ+5sU=E!aX";
-  let code="";
-  for(let i=0;i<52;i++){
-    code+=chars[Math.floor(Math.random()*chars.length)];
-  }
-  return code;
+
+  const encryptedCode =
+  "WjlAdkwjM3hUITdxUiQybVBeOHlXKjRrQiAlMWRGJjZuSD8wY0orNXNVPUUhYVg=";
+
+  return atob(encryptedCode);
+
 }
 
 /* ================= UNDO ================= */
 
 function undoMove(){
   const last=undoStack.pop();
-  if(last) last.cell.value="";
+  if(last) last.value="";
 }
 
 /* ================= CLEAR ================= */
@@ -205,49 +192,56 @@ function clearBoard(){
 /* ================= NUMBER PAD ================= */
 
 function insertNumber(num){
-  if(activeInput) activeInput.value=num;
+  if(activeInput && !locked){
+    activeInput.value=num;
+  }
 }
 
 function clearCell(){
-  if(activeInput) activeInput.value="";
+  if(activeInput && !locked){
+    activeInput.value="";
+  }
 }
 
-/* ================= DRAG ================= */
+/* ================= DRAG NUMBER PAD ================= */
 
-const pad = document.getElementById("numberPad");
-const header = document.getElementById("padHeader");
-let offsetX, offsetY, dragging=false;
+const pad=document.getElementById("numberPad");
+const header=document.getElementById("padHeader");
 
-header.addEventListener("mousedown", (e)=>{
-  dragging = true;
-  offsetX = e.clientX - pad.offsetLeft;
-  offsetY = e.clientY - pad.offsetTop;
-});
+if(header){
+  let offsetX, offsetY, dragging=false;
 
-document.addEventListener("mousemove", (e)=>{
-  if(dragging){
-    pad.style.left = (e.clientX - offsetX) + "px";
-    pad.style.top  = (e.clientY - offsetY) + "px";
-    pad.style.bottom = "auto";
-    pad.style.right = "auto";
-  }
-});
+  header.addEventListener("mousedown",(e)=>{
+    dragging=true;
+    offsetX=e.clientX-pad.offsetLeft;
+    offsetY=e.clientY-pad.offsetTop;
+  });
 
-document.addEventListener("mouseup", ()=>{
-  dragging = false;
-});
+  document.addEventListener("mousemove",(e)=>{
+    if(dragging){
+      pad.style.left=(e.clientX-offsetX)+"px";
+      pad.style.top=(e.clientY-offsetY)+"px";
+      pad.style.bottom="auto";
+      pad.style.right="auto";
+    }
+  });
 
-/* ================= MINIMIZE ================= */
+  document.addEventListener("mouseup",()=>dragging=false);
+}
 
-const toggleBtn = document.getElementById("toggleBtn");
-const padBody = document.getElementById("padBody");
+/* ================= MINIMIZE PAD ================= */
 
-toggleBtn.addEventListener("click", ()=>{
-  if(padBody.style.display==="none"){
-    padBody.style.display="block";
-    toggleBtn.textContent="–";
-  } else {
-    padBody.style.display="none";
-    toggleBtn.textContent="+";
-  }
-});
+const toggleBtn=document.getElementById("toggleBtn");
+const padBody=document.getElementById("padBody");
+
+if(toggleBtn){
+  toggleBtn.addEventListener("click",()=>{
+    if(padBody.style.display==="none"){
+      padBody.style.display="block";
+      toggleBtn.textContent="–";
+    } else {
+      padBody.style.display="none";
+      toggleBtn.textContent="+";
+    }
+  });
+}
